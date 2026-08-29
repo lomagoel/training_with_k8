@@ -11,7 +11,7 @@ COPY requirements/train.txt requirements/train.txt
 RUN pip install --no-cache-dir -r requirements/train.txt --break-system-packages
 
 # Stage 2: Training runtime
-FROM base AS training
+FROM base AS  training
 WORKDIR /app
 
 COPY src/ ./src/

@@ -1,6 +1,7 @@
 model:
   architecture: resnet18
   num_classes: 10
+  
 training:
   epochs: 10
   batch_size: 64

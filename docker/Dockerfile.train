@@ -1,0 +1,20 @@
+# Stage 1: Base with dependencies
+FROM pytorch/pytorch:2.13.0-cuda13.2-cudnn9-runtime AS base
+WORKDIR /app
+
+
+# Prevent python from writing pyc files and buffer stdout/stderr
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+COPY requirements/train.txt requirements/train.txt
+RUN pip install --no-cache-dir -r requirements/train.txt --break-system-packages
+
+# Stage 2: Training runtime
+FROM base AS training
+WORKDIR /app
+
+COPY src/ ./src/
+COPY configs/ ./configs/
+
+ENTRYPOINT ["python", "src/train.py"]

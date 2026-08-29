@@ -1,0 +1,54 @@
+# 1. Physical Volumes linking to your Minikube GCS mounts
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ml-data-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
+  hostPath:
+    path: /mnt/cifar        # Maps to GCS cifar bucket mount
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ml-checkpoint-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual
+  hostPath:
+    path: /mnt/ml-model     # Maps to  GCS model bucket mount
+
+---
+# 2. Volume Claims required by the assignment
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ml-data-pvc
+  namespace: ml-training
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: manual
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ml-checkpoint-pvc
+  namespace: ml-training
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: manual

@@ -85,7 +85,7 @@ def main():
     train_loader, val_loader = get_dataloaders(
         data_dir=config["data"]["data_dir"],
         batch_size=config["training"]["batch_size"],
-        download = False
+        download=False,
     )
 
     optimizer = torch.optim.Adam(
@@ -138,9 +138,7 @@ def main():
             patience_counter += 1
             if patience_counter >= patience:
                 print(
-                    json.dumps(
-                        {"event": "early_stopping", "epoch": epoch + 1}
-                    ),
+                    json.dumps({"event": "early_stopping", "epoch": epoch + 1}),
                     flush=True,
                 )
                 break

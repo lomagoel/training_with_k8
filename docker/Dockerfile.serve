@@ -1,0 +1,27 @@
+FROM python:3.11-slim AS base
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+
+COPY requirements/base_serve.txt requirements/base_serve.txt
+RUN pip install --timeout=3000  --no-cache-dir -r requirements/base_serve.txt --break-system-packages
+
+FROM base as  serve
+# Create non-root user for security compliance
+RUN useradd -m -u 1000 appuser
+
+COPY requirements/add_serve.txt requirements/add_serve.txt
+RUN pip install --timeout=3000  --no-cache-dir -r requirements/add_serve.txt --break-system-packages
+
+COPY src/ ./src/
+
+RUN chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8080
+
+
+CMD ["uvicorn", "src.serve:app", "--host", "0.0.0.0", "--port", "8080"]
